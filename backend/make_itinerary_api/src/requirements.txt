@@ -1,0 +1,6 @@
+openai
+functions_framework
+googlemaps
+firebase_admin
+slackclient
+python-dotenv
