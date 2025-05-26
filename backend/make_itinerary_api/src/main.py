@@ -4,13 +4,15 @@ import functions_framework
 import openai
 import time
 from datetime import datetime, timezone
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 from typing import List, Optional
-from .prompt import ITINERARY_GENERATION_PROMPT, ITINERARY_GENERATION_QUERY
 from dotenv import load_dotenv
-# Load environment variables from .env file
-load_dotenv()
+load_dotenv() # Load environment variables from .env file
+from .prompt import ITINERARY_GENERATION_PROMPT, ITINERARY_GENERATION_QUERY
 from .google_places import get_restaurant_options, get_tourist_places
+from .weather import get_weather_today
+from .ticket_master import get_events_today
+from .slack_logger import dbg
 
 class Activity(BaseModel):
     start_time: str
@@ -22,22 +24,9 @@ class Activity(BaseModel):
 
 class Itinerary(BaseModel):
     itinerary: List[Activity]
+    reason : str
 
 openai_client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-
-
-def get_shows_today():
-    print("Gathering Shows Information...")
-    # TODO: Get events from Ticket Master
-    return "Sample shows today: Jazz Night at City Hall @ 4pm, Outdoor Theater - Hamlet @ 6:30pm, Rock Concert at Arena @ 7am"
-
-def get_weather_today(lat, lng):
-    print("Gathering Weather Information...")
-    # TODO: Get the weather today from Open Meteo
-    return (
-        f"Sample weather for coordinates ({lat}, {lng}): "
-        "Sunny, 24°C, humidity 55%, light breeze. Sunrise at 06:00, sunset at 20:15"
-    )
 
 def generate_query(weather_info, restaurant_options, places_options, events):
     return ITINERARY_GENERATION_QUERY.format(
@@ -65,20 +54,21 @@ def process_request(payload):
     city = payload.get("city")
     latitude = float(payload.get("latitude"))
     longitude = float(payload.get("longitude"))
-    date = payload.get("date")
-    print("Generating itinerary for {}, Date {},Current system time {}".format(city, date, datetime.now(timezone.utc)))
+    time_zone = payload.get("timezone")
+    dbg.info("Generating itinerary for {}, Current system time {}".format(city, datetime.now(timezone.utc)))
     # Validate the input
     if not latitude or not longitude:
+        dbg.severe("Invalid input. Please provide city, latitude, and longitude.")
         return {"error": "Invalid input. Please provide city, latitude, and longitude."}, 400
 
     # Get information from different APIs
-    print("Gathering information...")
+    dbg.info("Gathering information...")
     restaurant_options = get_restaurant_options(latitude, longitude)
     places = get_tourist_places(latitude, longitude)
     weather = get_weather_today(latitude, longitude)
-    events = get_shows_today()
+    events = get_events_today(latitude, longitude, time_zone)
     question = generate_query(weather, restaurant_options, places, events)
-    print("Making the itinerary...")
+    dbg.info("Making the itinerary...")
     response = ask_gpt(question, ITINERARY_GENERATION_PROMPT, "gpt-4o-2024-08-06")
     return json.loads(response.model_dump_json()), 200
 
@@ -103,14 +93,14 @@ def one_day_itinerary(request):
     if request.data:
         # Get the payload from the request
         try:
-            print("Start.")
+            dbg.info("Woke Up.")
             start_time = time.time()
             result, status_code = process_request(request.get_json())
             end_time = time.time()
             result.update({"request_process_time": end_time - start_time})
-            print("Done.")
+            dbg.info("Done, Sleeping.")
             return result, status_code, headers
         except Exception as e:
-            print(e)
+            dbg.severe(str(e))
             return "Something unexpected happened:", 200, headers
     return {}, 404, headers

@@ -1,6 +1,7 @@
 import os
 import googlemaps
 import random
+from .slack_logger import dbg
 
 _KEYS = [
     "address_components",
@@ -175,7 +176,7 @@ def convert_operational_hours(hours_data):
             }
         return {"operational_hours": operational_hours}
     except Exception as e:
-        print(f"Unable to comprehend operational_hours {hours_data}, error: {e}")
+        dbg.severe(f"Unable to comprehend operational_hours {hours_data}, error: {e}")
         return {"operational_hours": {}}
 
 def get_place_info(place_id):
@@ -207,7 +208,7 @@ def get_places_info(places):
     return places_info
 
 def get_restaurant_options(lat, long):
-    print("Gathering Restaurant Information...")
+    dbg.info("Gathering Restaurant Information...")
     restaurants = get_restaurants_from_google(lat, long)
     restaurant_ids = rank_places_based_on_review(restaurants)
     information = get_places_info(restaurant_ids)
@@ -234,7 +235,7 @@ def get_restaurants_from_google(lat: float, lng: float):
                 places.append(place)
         return places
     except Exception as e:
-        print(e)
+        dbg.severe(str(e))
         return []
 
 def get_tourist_place_from_google(lat: float, lng: float):
@@ -254,7 +255,7 @@ def get_tourist_place_from_google(lat: float, lng: float):
                 places.append(place)
         return places
     except Exception as e:
-        print(e)
+        dbg.severe(str(e))
         return []
 
 def _get_place_picture_url(photos) -> str:
@@ -265,7 +266,7 @@ def _get_place_picture_url(photos) -> str:
     return ""
     
 def get_tourist_places(lat, long):
-    print("Gathering Places Information...")
+    dbg.info("Gathering Places Information...")
     places = get_tourist_place_from_google(lat, long)
     place_ids = rank_places_based_on_review(places)
     information = get_places_info(place_ids)

@@ -1,15 +1,5 @@
 """
-FILE TO LIST ALL THE PROMPTS
-"""
-QUERIES_FOR_PLACES_API_PROMPT = """
-Given the information of about the weather today. Can you come with keyword search on google to 
-find places to visit and restaurants. Return two queries, one for restaurant search and other for tourist places search.
-Analyze the weather information provided to you and make the decision. Your return value should be in the following format:
-
-{
-    "restaurant_query": <the query you decided for the restaurant>
-    "place_query": <the query you decided for the place> 
-} 
+LIST ALL THE PROMPTS
 """
 ITINERARY_GENERATION_PROMPT = """
 You are given the following information:
@@ -62,6 +52,7 @@ You do not have to include everything from each category but mix it up if you fe
             "address": "Rooftop Blvd, Cityville"
         }
     ]
+    "reason": // provide a reason why you selected what you selected for today
 }
 """
 
