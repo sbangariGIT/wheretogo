@@ -66,8 +66,8 @@ def get_events_from_ticket_master(lat, lng, date):
                 # clean the entr
                 events.append(_clean_event(entry))
                 index += 1
-    except requests.exceptions.RequestException as e:
-        dbg.severe(str(e))
+    except Exception as e:
+        dbg.severe(f"Unable to gather Events Information: {e}")
         return []
     return events
 

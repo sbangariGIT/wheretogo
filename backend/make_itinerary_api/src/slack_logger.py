@@ -39,21 +39,21 @@ class Logger:
         """
         Logs an informational message.
         """
-        debug_print(message)
+        debug_print(message, level="INFO")
         self.notify_slack(message, level="INFO")
 
     def warning(self, message):
         """
         Logs a warning message.
         """
-        debug_print(message)
+        debug_print(message, level="WARNING")
         self.notify_slack(message, level="WARNING")
 
     def severe(self, message):
         """
         Logs a severe (critical) message.
         """
-        debug_print(message)
+        debug_print(message, level="SEVERE")
         self.notify_slack(message, level="SEVERE")
 
 

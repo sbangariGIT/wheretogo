@@ -209,10 +209,14 @@ def get_places_info(places):
 
 def get_restaurant_options(lat, long):
     dbg.info("Gathering Restaurant Information...")
-    restaurants = get_restaurants_from_google(lat, long)
-    restaurant_ids = rank_places_based_on_review(restaurants)
-    information = get_places_info(restaurant_ids)
-    return information
+    try:
+        restaurants = get_restaurants_from_google(lat, long)
+        restaurant_ids = rank_places_based_on_review(restaurants)
+        information = get_places_info(restaurant_ids)
+        return information
+    except Exception as e:
+        dbg.severe(f"Unable to gather Restaurant Information: {e}")
+        return {}
 
 
 def _get_random_tourist_activities(n=5):
@@ -267,7 +271,11 @@ def _get_place_picture_url(photos) -> str:
     
 def get_tourist_places(lat, long):
     dbg.info("Gathering Places Information...")
-    places = get_tourist_place_from_google(lat, long)
-    place_ids = rank_places_based_on_review(places)
-    information = get_places_info(place_ids)
+    try:
+        places = get_tourist_place_from_google(lat, long)
+        place_ids = rank_places_based_on_review(places)
+        information = get_places_info(place_ids)
+    except Exception as e:
+        dbg.severe(f"Unable to gather Tourist Information: {e}")
+        return []
     return information
