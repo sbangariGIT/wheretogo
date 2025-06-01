@@ -8,7 +8,6 @@ OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
 
 def get_weather_today(lat, lng):
 	dbg.info("Gathering weather data...")
-	weather_data = {}
 	params = {
 		"latitude": lat,
 		"longitude": lng,
@@ -42,8 +41,8 @@ def get_weather_today(lat, lng):
 				hourly.Variables(3).ValuesAsNumpy()
 			)
 		}
+		return weather_data
 	except Exception as e:
 		dbg.severe(f"Unable to gather Weather Information: {e}")
 		return {}
-	return weather_data
 

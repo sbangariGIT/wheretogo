@@ -1,7 +1,3 @@
-"""
-I like my logs on slack, it's just helpful to see while I am away from workstation.
-Maybe it is worth my time to make this a private package once I have bandwidth
-"""
 from slack import WebClient
 import os
 
@@ -57,4 +53,4 @@ class Logger:
         formatted_message = f"[{self.app_name}]:[{self.env}] [{level}] {message}"
         print(formatted_message)
 
-dbg = Logger("MAKE_ITINERARY_API")
+dbg = Logger("CITY_ITINERARY_SCHEDULER")

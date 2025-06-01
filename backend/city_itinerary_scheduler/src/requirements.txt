@@ -1,0 +1,4 @@
+functions_framework
+firebase_admin
+slackclient
+python-dotenv

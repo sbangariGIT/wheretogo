@@ -1,11 +1,8 @@
 openai
 functions_framework
 googlemaps
-firebase_admin
 slackclient
 python-dotenv
 openmeteo-requests
-requests-cache
-retry-requests
 numpy
 pandas
