@@ -15,11 +15,8 @@ from firebase import firebaseHandler
 
 GENERATE_ITINERARY_API = os.environ["GENERATE_ITINERARY_API"]
 
-def write_to_db(city, itinerary):
-    print(f"Saving itinerary for {city['city_name']} ({city['country']}) to DB...")
-    # Implement your DB logic here
-
 async def call_api(session, city):
+    print(f"Calling API for {city['city_name']} in timezone {city['timezone']}")
     payload = {
         "city": city["city_name"],
         "timezone": city["timezone"],
@@ -30,7 +27,7 @@ async def call_api(session, city):
     try:
         async with session.post(GENERATE_ITINERARY_API, json=payload) as response:
             data = await response.json()
-            firebaseHandler.add_document(city, date, data)
+            firebaseHandler.add_document(city['city_name'], date, data)
             return {"city": city["city_name"], "status": "success"}
     except Exception as e:
         print(f"Failed for {city['city_name']}: {e}")
@@ -64,8 +61,7 @@ def process_request():
     # Check if there are cities that need to be run in this window -> current time between 4:00 am - 4:30 am
     cities = get_cities()
     if len(cities) == 0:
-        print("No cities to run right now, thank you!")
-        return {}
+        return {"message": "No cities to run right now, thank you!"}
     # Efficiently call the api for each city in cities and then write to DB
     results = asyncio.run(process_all_cities(cities))
     return {"results": results}
@@ -88,11 +84,8 @@ def city_itinerary_scheduler(request):
 
     # Get the payload from the request
     try:
-        start_time = time.time()
-        result, status_code = process_request()
-        end_time = time.time()
-        result.update({"request_process_time": end_time - start_time})
-        return result, status_code, headers
+        result = process_request()
+        return result, 200, headers
     except Exception as e:
         print(e)
         return "Something unexpected happened:", 200, headers

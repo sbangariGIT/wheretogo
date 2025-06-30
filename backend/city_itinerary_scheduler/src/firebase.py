@@ -65,4 +65,4 @@ class FirebaseHandler:
         self.db.collection(collection_name).document(document_id).delete()
 
 
-firebaseHandler = FirebaseHandler('.firebase_cred.json')
+firebaseHandler = FirebaseHandler('firebase_cred.json')
