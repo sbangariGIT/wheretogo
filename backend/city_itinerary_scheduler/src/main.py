@@ -12,11 +12,12 @@ from zoneinfo import ZoneInfo
 import asyncio
 import aiohttp
 from firebase import firebaseHandler
+from slack_logger import dbg
 
 GENERATE_ITINERARY_API = os.environ["GENERATE_ITINERARY_API"]
 
 async def call_api(session, city):
-    print(f"Calling API for {city['city_name']} in timezone {city['timezone']}")
+    dbg.info(f"Calling API for {city['city_name']} in timezone {city['timezone']}")
     payload = {
         "city": city["city_name"],
         "timezone": city["timezone"],
@@ -52,7 +53,7 @@ def get_cities():
             if time(4, 0) <= local_time <= time(4, 30):
                 cities.extend(city_list)
         except Exception as e:
-            print(f"Error with timezone {timezone_str}: {e}")
+            dbg.severe(f"Error with timezone {timezone_str}: {e}")
             continue
     return cities
 
@@ -85,7 +86,9 @@ def city_itinerary_scheduler(request):
     # Get the payload from the request
     try:
         result = process_request()
+        dbg.info("City itinerary scheduler completed successfully.")
+        dbg.info(f"Result: {result}")
         return result, 200, headers
     except Exception as e:
-        print(e)
+        dbg.severe(e)
         return "Something unexpected happened:", 200, headers
