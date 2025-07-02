@@ -13,11 +13,11 @@ class Logger:
         Sends a message to Slack with a specific severity level.
         """
         if self.env == "STAGING":
-            # I do not need messages while developing
+            # I do not need slack messages while developing
+            self.debug_print(f"Sending Slack Message: {formatted_message}")
             return
         try:
             formatted_message = f"[{self.app_name}]:[{self.env}] [{level}] {message}"
-            # debug_print(f"Sending Slack Message: {formatted_message}")
             self.slack_client.chat_postMessage(
                 channel='monitor-cloud',
                 text=formatted_message

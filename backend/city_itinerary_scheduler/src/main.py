@@ -29,9 +29,10 @@ async def call_api(session, city):
         async with session.post(GENERATE_ITINERARY_API, json=payload) as response:
             data = await response.json()
             firebaseHandler.add_document(city['city_name'], date, data)
+            dbg.info(f"Successfully processed {city['city_name']}: {data}")
             return {"city": city["city_name"], "status": "success"}
     except Exception as e:
-        print(f"Failed for {city['city_name']}: {e}")
+        dbg.severe(f"Failed for {city['city_name']}: {e}")
         return {"city": city["city_name"], "status": "failed", "error": str(e)}
 
 async def process_all_cities(cities):
