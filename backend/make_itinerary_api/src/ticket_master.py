@@ -2,7 +2,6 @@ import requests
 import os
 from datetime import datetime, time
 from zoneinfo import ZoneInfo
-from .slack_logger import dbg
 # Define your base URL
 TICKETMASTER_BASE_URL = "https://app.ticketmaster.com/discovery/v2/events.json"
 
@@ -52,28 +51,26 @@ def get_events_from_ticket_master(lat, lng, date):
         "units": "miles",
     }
     events = []
-    try:
-        top_k = 3
-        # Make the GET request
-        for evt_type in EVENT_TYPES:
-            index = 0
-            params["keyword"] = evt_type
-            response = requests.get(TICKETMASTER_BASE_URL, params=params)
-            entries = response.json()["_embedded"]["events"]
-            for entry in entries:
-                if index > top_k:
-                    break
-                # clean the entr
-                events.append(_clean_event(entry))
-                index += 1
-    except Exception as e:
-        dbg.severe(f"Unable to gather Events Information: {e}")
-        return []
+    top_k = 3
+    # Make the GET request
+    for evt_type in EVENT_TYPES:
+        index = 0
+        params["keyword"] = evt_type
+        response = requests.get(TICKETMASTER_BASE_URL, params=params)
+        entries = response.json()["_embedded"]["events"]
+        for entry in entries:
+            if index > top_k:
+                break
+            # clean the entr
+            events.append(_clean_event(entry))
+            index += 1
     return events
 
 
 
 def get_events_today(lat, lng, timezone):
-    dbg.info("Gathering Events Information...")
-    events = get_events_from_ticket_master(lat=lat, lng=lng, date=get_start_of_day_iso(timezone))
-    return events
+    try:
+        events = get_events_from_ticket_master(lat=lat, lng=lng, date=get_start_of_day_iso(timezone))
+        return events, False
+    except Exception as e:
+        return {"error": str(e)}, True

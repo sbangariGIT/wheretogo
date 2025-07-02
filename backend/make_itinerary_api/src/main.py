@@ -62,14 +62,23 @@ def process_request(payload):
         return {"error": "Invalid input. Please provide city, latitude, and longitude."}, 400
 
     # Get information from different APIs
-    dbg.info("Gathering information...")
-    restaurant_options = get_restaurant_options(latitude, longitude)
-    places = get_tourist_places(latitude, longitude)
-    weather = get_weather_today(latitude, longitude)
-    events = get_events_today(latitude, longitude, time_zone)
+    failures = {}
+    restaurant_options, error = get_restaurant_options(latitude, longitude)
+    if error:
+        failures["restaurant_options"] = restaurant_options
+    places, error = get_tourist_places(latitude, longitude)
+    if error:
+        failures["places"] = places
+    weather, error = get_weather_today(latitude, longitude)
+    if error:
+        failures["weather"] = weather
+    events, error = get_events_today(latitude, longitude, time_zone)
+    if error:
+        failures["events"] = events
     question = generate_query(weather, restaurant_options, places, events)
-    dbg.info("Making the itinerary...")
     response = ask_gpt(question, ITINERARY_GENERATION_PROMPT, "gpt-4o-2024-08-06")
+    failures['city'] = city
+    dbg.info("Failures: {}".format(failures))
     return json.loads(response.model_dump_json()), 200
 
 

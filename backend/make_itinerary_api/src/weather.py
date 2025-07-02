@@ -1,13 +1,11 @@
 import openmeteo_requests
 import pandas as pd
-from .slack_logger import dbg
 
 # TODO: Need to build this better to extract the weather information
 client = openmeteo_requests.Client()
 OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
 
 def get_weather_today(lat, lng):
-	dbg.info("Gathering weather data...")
 	params = {
 		"latitude": lat,
 		"longitude": lng,
@@ -41,8 +39,7 @@ def get_weather_today(lat, lng):
 				hourly.Variables(3).ValuesAsNumpy()
 			)
 		}
-		return weather_data
+		return weather_data, False
 	except Exception as e:
-		dbg.severe(f"Unable to gather Weather Information: {e}")
-		return {}
+		return {"error": f"Unable to gather Weather Information: {e}"}, True
 
