@@ -63,13 +63,14 @@ function App() {
   const today = new Date().toLocaleDateString();
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>One Day Itinerary</h1>
-        <div style={{ margin: '1rem 0' }}>
-          <label htmlFor="city-select">Select a city: </label>
+    <div className="odi-bg">
+      <header className="odi-header">
+        <h1 className="odi-title">One Day Itinerary</h1>
+        <div className="odi-form-group">
+          <label htmlFor="city-select" className="odi-label">Select a city:</label>
           <select
             id="city-select"
+            className="odi-select"
             value={selectedCity?.city_id || ''}
             onChange={e => {
               const cityId = Number(e.target.value);
@@ -90,24 +91,23 @@ function App() {
             ))}
           </select>
         </div>
-        <div style={{ margin: '1rem 0' }}>
+        <div className="odi-date">
           <strong>Date:</strong> {today}
         </div>
         {selectedCity && (
-          <div style={{ margin: '2rem 0', width: '100%', maxWidth: 600 }}>
-            <h2>Itinerary for {selectedCity.city_name}</h2>
-            {/* Replace with real itinerary fetch logic */}
-            <ul style={{ listStyle: 'none', padding: 0 }}>
+          <div className="odi-itinerary-container">
+            <h2 className="odi-itinerary-title">Itinerary for {selectedCity.city_name}</h2>
+            <ul className="odi-itinerary-list">
               {sampleItinerary.map((item, idx) => (
-                <li key={idx} style={{ marginBottom: '1.5rem', border: '1px solid #ccc', borderRadius: 8, padding: 16, background: '#222' }}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <img src={item.picture_url} alt={item.activity} style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 8, marginRight: 16 }} />
-                    <div>
-                      <h3 style={{ margin: 0 }}>{item.activity}</h3>
-                      <div><strong>Time:</strong> {item.start_time} - {item.end_time}</div>
-                      <div><strong>Address:</strong> {item.address}</div>
-                      <a href={item.google_maps_link} target="_blank" rel="noopener noreferrer" style={{ color: '#61dafb' }}>View on Google Maps</a>
-                    </div>
+                <li key={idx} className="odi-itinerary-card">
+                  <div className="odi-card-img-wrap">
+                    <img src={item.picture_url} alt={item.activity} className="odi-card-img" />
+                  </div>
+                  <div className="odi-card-content">
+                    <h3 className="odi-card-activity">{item.activity}</h3>
+                    <div className="odi-card-time"><strong>Time:</strong> {item.start_time} - {item.end_time}</div>
+                    <div className="odi-card-address"><strong>Address:</strong> {item.address}</div>
+                    <a href={item.google_maps_link} target="_blank" rel="noopener noreferrer" className="odi-card-link">View on Google Maps</a>
                   </div>
                 </li>
               ))}
