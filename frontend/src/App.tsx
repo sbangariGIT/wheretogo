@@ -52,7 +52,7 @@ const sampleItinerary: ItineraryItem[] = [
     address: '210 Alpine St, Los Angeles, CA 90012, USA',
     end_time: '10:00',
     google_maps_link: 'https://maps.google.com/?cid=4012018546653054497',
-    picture_url: 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=ATKogpdW4g1aHPl7jqgu1nGO0wkInnKsGPySYtSvtAbT9GfakURiV34GzyHX2V1vn-1itanwS2oT1rOYmqeP8Q7-bprDQLypZLcKsxxGGSCOpwEgmeJBIoj8T96ScjUH_zRNmLj1udaFzFnjRGW7fGQj1Yk9OqneC34D-F18Pv0jEKrMM0GwpPgV_2KU2DQzPFTsQBdo0Q3BjssclzwurwNnMkLjc1fKhXm5v7hd_Q2gct7krYG-VbzEYgp3Jdsd-yG6zhaVlfXrph6eT-7YHrjLWtObjD0t8fW0F7yAzgBn7JD-9K1Vn8H6clURJWjoVw0RXhKS1pAmxdwOzhjjo5POdXJhPMEgaxcghC1vADVDU-jQUmySgNqrpxHCkdX3yKKbww2bN0r3-vVZ4x_GWUyUwzWEEE8j5WDmYwKKYCM_PtH4InRkSUDQFzWRh6vwsgZRUWyrbQmMS5WjEjD6l6NfSwSoX0UuGBsDyUbxk55svUb4QFpbl_vb5WCnsz1M-tyV03na94ekMsNv8vozf1_7o8lx12TZV0wKfFqHeGlQUjNxrui0R2JiZY28gHS5lVOo6IeD-Q8a74SACmrKp9jYtRmCH4cQOwXhKJUTlWkfX1EU5D9yLyVDHAolSrebiN5CkczuGoKb&key=AIzaSyB4tv74XZrkEXW5uvmyAy55L5kqssWhA3U',
+    picture_url: 'https://example.com/breakfast.jpg',
     start_time: '09:00',
   },
   // ... more sample items ...
