@@ -29,7 +29,7 @@ async def call_api(session, city):
         async with session.post(GENERATE_ITINERARY_API, json=payload) as response:
             data = await response.json()
             firebaseHandler.add_document(city['city_name'], date, data)
-            dbg.info(f"Successfully processed {city['city_name']}: {data}")
+            dbg.info(f"Successfully processed {city['city_name']}")
             return {"city": city["city_name"], "status": "success"}
     except Exception as e:
         dbg.severe(f"Failed for {city['city_name']}: {e}")
@@ -47,11 +47,10 @@ def get_cities():
     """
     cities = []
     now_utc = datetime.utcnow()
-
     for timezone_str, city_list in CITIES_BY_TIMEZONE.items():
         try:
             local_time = now_utc.replace(tzinfo=ZoneInfo("UTC")).astimezone(ZoneInfo(timezone_str)).time()
-            if time(4, 0) <= local_time <= time(4, 30):
+            if time(3, 0) <= local_time <= time(4, 0):
                 cities.extend(city_list)
         except Exception as e:
             dbg.severe(f"Error with timezone {timezone_str}: {e}")
@@ -66,7 +65,8 @@ def process_request():
         return {"message": "No cities to run right now, thank you!"}
     # Efficiently call the api for each city in cities and then write to DB
     results = asyncio.run(process_all_cities(cities))
-    return {"results": results}
+    dbg.info(f"Result: {results}")
+    return {"message": "Successfully processed all cities", "results": results}
 
 @functions_framework.http
 def city_itinerary_scheduler(request):
@@ -86,9 +86,8 @@ def city_itinerary_scheduler(request):
 
     # Get the payload from the request
     try:
+        dbg.info("Trigger Hourly City Scheduler.")
         result = process_request()
-        dbg.info("City itinerary scheduler completed successfully.")
-        dbg.info(f"Result: {result}")
         return result, 200, headers
     except Exception as e:
         dbg.severe(e)
