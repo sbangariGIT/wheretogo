@@ -112,7 +112,7 @@ function App() {
   const itineraryRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  const today = new Date().toLocaleDateString();
+  // const today = new Date().toLocaleDateString();
 
   // Filter cities based on search term
   useEffect(() => {
@@ -180,7 +180,7 @@ function App() {
               <button onClick={closeError} className="odi-error-close">×</button>
             </div>
               <p className="odi-error-content">
-                Please try selecting a different city or check back later.
+                The team has been notified. We will fix this soon. Meanwhile try selecting a different city or check back later.
               </p>
             <div className="odi-error-actions">
               <button onClick={closeError} className="odi-error-button">
@@ -233,9 +233,9 @@ function App() {
           <div className="odi-container">
             <div className="odi-itinerary-header">
               <h2 className="odi-itinerary-title">
-                {loading ? 'Loading itinerary...' : `Itinerary for ${selectedCity.city_name}`}
+                {loading ? 'Loading itinerary...' : `${selectedCity.city_name} Today`}
               </h2>
-              <div className="odi-date">Date: {today}</div>
+              {/* <div className="odi-date">Date: {today}</div> */}
             </div>
 
             {loading && (
@@ -254,7 +254,17 @@ function App() {
                   {itinerary.itinerary.map((item, idx) => (
                     <li key={idx} className="odi-itinerary-card">
                       <div className="odi-card-img-wrap">
-                        <img src={item.picture_url} alt={item.activity} className="odi-card-img" />
+                        <img
+                          src={item.picture_url && item.picture_url !== "null" ? item.picture_url : require("./assets/default.png")}
+                          alt={item.activity}
+                          className="odi-card-img"
+                          onError={e => {
+                            const target = e.target as HTMLImageElement;
+                            if (target.src !== require("./assets/default.png")) {
+                              target.src = require("./assets/default.png");
+                            }
+                          }}
+                        />
                       </div>
                       <div className="odi-card-content">
                         <h3 className="odi-card-activity">{item.activity}</h3>
@@ -264,14 +274,16 @@ function App() {
                         <div className="odi-card-address">
                           <strong>Address:</strong> {item.address}
                         </div>
-                        <a 
-                          href={item.google_maps_link} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="odi-card-link"
-                        >
-                          View on Google Maps
-                        </a>
+                        {item.google_maps_link && item.google_maps_link !== "null" && (
+                          <a 
+                            href={item.google_maps_link} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="odi-card-link"
+                          >
+                            View on Google Maps
+                          </a>
+                        )}
                       </div>
                     </li>
                   ))}
