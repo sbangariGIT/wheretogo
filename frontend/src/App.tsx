@@ -5,7 +5,7 @@ import './App.css';
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics, logEvent } from "firebase/analytics";
-import { collection, doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, addDoc } from "firebase/firestore";
 // Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,7 +16,7 @@ console.log(firebaseConfig);
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const analytics = getAnalytics(app);
-logEvent(analytics, 'notification_received');
+logEvent(analytics, 'wheretogotoday_opened');
 
 // Function to get the latest document from a city collection
 export async function getLatestCityDocument(city: string) {
@@ -35,6 +35,35 @@ export async function getLatestCityDocument(city: string) {
     throw error;
   }
 } 
+
+export async function logCityError(city: string, country: string, errorMessage: string) {
+  try {
+    // Get user's local time as ISO string
+    const userLocalTime = new Date().toISOString();
+
+    // Get browser type (user agent)
+    const browserType = navigator.userAgent;
+
+    // Reference to the 'errors' collection, document named after the city, with a new subdocument (auto-id)
+    const errorsCollectionRef = collection(db, "errors", city, "logs");
+
+    // Prepare error data
+    const errorData = {
+      city,
+      country,
+      errorMessage,
+      userLocalTime,
+      browserType,
+      timestamp: new Date()
+    };
+
+    // @ts-ignore
+    await addDoc(errorsCollectionRef, errorData);
+  } catch (err) {
+    console.error("Failed to log city error:", err);
+  }
+}
+
 
 // City and timezone data (copied from backend)
 const CITIES_BY_TIMEZONE = {
@@ -147,6 +176,11 @@ function App() {
         itineraryRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     } catch (error) {
+      logEvent(
+        analytics,
+        `wheretogotoday_itinerary_failed_${city.city_name}_${city.country}`
+      );
+      logCityError(city.city_name, city.country, error instanceof Error ? error.message : 'Failed to fetch itinerary')
       console.error('Error fetching itinerary:', error);
       setError(error instanceof Error ? error.message : 'Failed to fetch itinerary');
     } finally {
