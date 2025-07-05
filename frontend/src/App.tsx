@@ -172,8 +172,8 @@ function App() {
       {/* Hero Section */}
       <section className="odi-hero">
         <div className="odi-hero-content">
-          <h1 className="odi-hero-title">One Day Itinerary</h1>
-          <p className="odi-hero-subtitle">Discover the perfect day in any city</p>
+          <h1 className="odi-hero-title">Discover the perfect day in the city</h1>
+          <p className="odi-hero-subtitle">Smart itineraries crafted daily using live weather, events, and local vibes — tailored for your city adventures.</p>
           
           {/* Search Bar */}
           <div className="odi-search-container" ref={searchRef}>

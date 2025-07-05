@@ -220,6 +220,7 @@ body, html, #root, .odi-bg {
   max-width: 800px;
   padding: 2rem;
   color: white;
+  margin-top: -8vh;
 }
 
 .odi-hero-title {
