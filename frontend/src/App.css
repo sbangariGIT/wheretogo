@@ -703,3 +703,161 @@ body, html, #root, .odi-bg {
     height: 120px;
   }
 }
+
+/* Error Dialog Styles */
+.odi-error-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+}
+
+.odi-error-dialog {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.odi-error-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 0 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.odi-error-header h3 {
+  margin: 0;
+  color: #e74c3c;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.odi-error-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #666;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.odi-error-close:hover {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.odi-error-content {
+  padding: 1.5rem;
+}
+
+.odi-error-content p {
+  margin: 0 0 1rem 0;
+  color: #333;
+  line-height: 1.6;
+}
+
+.odi-error-suggestion {
+  color: #666 !important;
+  font-size: 0.95rem;
+  margin-top: 1rem !important;
+}
+
+.odi-error-actions {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.odi-error-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.odi-error-button:hover {
+  background: #0056b3;
+}
+
+/* Responsive Error Dialog */
+@media (max-width: 768px) {
+  .odi-error-overlay {
+    padding: 0.5rem;
+  }
+  
+  .odi-error-dialog {
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .odi-error-header {
+    padding: 1rem 1rem 0 1rem;
+  }
+  
+  .odi-error-header h3 {
+    font-size: 1.2rem;
+  }
+  
+  .odi-error-content {
+    padding: 1rem;
+  }
+  
+  .odi-error-actions {
+    padding: 0 1rem 1rem 1rem;
+  }
+  
+  .odi-error-button {
+    width: 100%;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .odi-error-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .odi-error-content p {
+    font-size: 0.95rem;
+  }
+  
+  .odi-error-suggestion {
+    font-size: 0.9rem;
+  }
+}

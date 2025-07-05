@@ -24,11 +24,10 @@ async def call_api(session, city):
         "latitude": city["latitude"],
         "longitude": city["longitude"]
     }
-    date = datetime.now(ZoneInfo(city["timezone"]) ).strftime('%Y-%m-%d')
     try:
         async with session.post(GENERATE_ITINERARY_API, json=payload) as response:
             data = await response.json()
-            firebaseHandler.add_document(city['city_name'], date, data)
+            firebaseHandler.add_document(city['city_name'], "latest", data)
             dbg.info(f"Successfully processed {city['city_name']}")
             return {"city": city["city_name"], "status": "success"}
     except Exception as e:

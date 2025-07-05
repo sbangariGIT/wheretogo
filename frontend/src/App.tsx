@@ -1,6 +1,41 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAnalytics, logEvent } from "firebase/analytics";
+import { collection, doc, getDoc } from "firebase/firestore";
+// Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+import firebaseConfig from './constants.tsx';
+console.log(firebaseConfig);
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const analytics = getAnalytics(app);
+logEvent(analytics, 'notification_received');
+
+// Function to get the latest document from a city collection
+export async function getLatestCityDocument(city: string) {
+  try {
+    const cityRef = collection(db, city);
+    const latestDocRef = doc(cityRef, 'latest');
+    const docSnapshot = await getDoc(latestDocRef);
+
+    if (!docSnapshot.exists()) {
+      throw new Error(`Document not found for: ${city}`);
+    }
+
+    return docSnapshot.data();
+  } catch (error) {
+    console.error(`Error fetching document for ${city}:`, error);
+    throw error;
+  }
+} 
+
 // City and timezone data (copied from backend)
 const CITIES_BY_TIMEZONE = {
   "America/New_York": [
@@ -52,57 +87,15 @@ type ItineraryResponse = {
   request_process_time: number;
 };
 
-// Mock function to get itinerary - replace with API call later
+// Real function to get itinerary from Firebase
 const getItineraryForCity = async (city: City): Promise<ItineraryResponse> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  return {
-    itinerary: [
-      {
-        activity: 'Breakfast at Local Cafe',
-        address: `${city.city_name} Downtown, ${city.country}`,
-        end_time: '10:00',
-        google_maps_link: 'https://maps.google.com',
-        picture_url: 'https://images.unsplash.com/photo-1504674900240-9f9d8b1b1b1b?w=400',
-        start_time: '09:00',
-      },
-      {
-        activity: 'Visit City Museum',
-        address: `${city.city_name} Cultural District, ${city.country}`,
-        end_time: '12:00',
-        google_maps_link: 'https://maps.google.com',
-        picture_url: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400',
-        start_time: '10:30',
-      },
-      {
-        activity: 'Lunch at Popular Restaurant',
-        address: `${city.city_name} Food Street, ${city.country}`,
-        end_time: '14:00',
-        google_maps_link: 'https://maps.google.com',
-        picture_url: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
-        start_time: '12:30',
-      },
-      {
-        activity: 'Explore City Park',
-        address: `${city.city_name} Central Park, ${city.country}`,
-        end_time: '16:00',
-        google_maps_link: 'https://maps.google.com',
-        picture_url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400',
-        start_time: '14:30',
-      },
-      {
-        activity: 'Dinner at Fine Dining',
-        address: `${city.city_name} Upscale District, ${city.country}`,
-        end_time: '20:00',
-        google_maps_link: 'https://maps.google.com',
-        picture_url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400',
-        start_time: '18:30',
-      },
-    ],
-    reason: `A perfect day in ${city.city_name} featuring local cuisine, cultural experiences, and beautiful sights.`,
-    request_process_time: 1.2,
-  };
+  try {
+    const cityData = await getLatestCityDocument(city.city_name);
+    return cityData as ItineraryResponse;
+  } catch (error) {
+    console.error('Error fetching itinerary:', error);
+    throw new Error(`Failed to fetch itinerary for ${city.city_name}`);
+  }
 };
 
 // Flatten all cities for search
@@ -115,6 +108,7 @@ function App() {
   const [itinerary, setItinerary] = useState<ItineraryResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const itineraryRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -142,6 +136,7 @@ function App() {
     setSearchTerm(`${city.city_name}, ${city.country}`);
     setShowDropdown(false);
     setLoading(true);
+    setError(null); // Clear any previous errors
 
     try {
       const itineraryData = await getItineraryForCity(city);
@@ -153,6 +148,7 @@ function App() {
       }, 100);
     } catch (error) {
       console.error('Error fetching itinerary:', error);
+      setError(error instanceof Error ? error.message : 'Failed to fetch itinerary');
     } finally {
       setLoading(false);
     }
@@ -164,11 +160,37 @@ function App() {
     if (!e.target.value) {
       setSelectedCity(null);
       setItinerary(null);
+      setError(null);
     }
+  };
+
+  // Close error dialog
+  const closeError = () => {
+    setError(null);
   };
 
   return (
     <div className="odi-bg">
+      {/* Error Dialog */}
+      {error && (
+        <div className="odi-error-overlay">
+          <div className="odi-error-dialog">
+            <div className="odi-error-header">
+              <h3>Oops! Something went wrong</h3>
+              <button onClick={closeError} className="odi-error-close">×</button>
+            </div>
+              <p className="odi-error-content">
+                Please try selecting a different city or check back later.
+              </p>
+            <div className="odi-error-actions">
+              <button onClick={closeError} className="odi-error-button">
+                Try Again
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="odi-hero">
         <div className="odi-hero-content">
