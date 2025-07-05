@@ -80,6 +80,7 @@ const CITIES_BY_TIMEZONE = {
     { city_id: 8, city_name: "Houston", country: "USA", timezone: "America/Chicago" },
     { city_id: 9, city_name: "San Antonio", country: "USA", timezone: "America/Chicago" },
     { city_id: 10, city_name: "Dallas", country: "USA", timezone: "America/Chicago" },
+    {city_id: 15, city_name: "Austin", country: "USA", timezone: "America/Chicago"},
   ],
   "America/Los_Angeles": [
     { city_id: 11, city_name: "Los Angeles", country: "USA", timezone: "America/Los_Angeles" },
