@@ -10,4 +10,6 @@ const firebaseConfig = {
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID!
 };
 
+export const API_URL = process.env.REACT_APP_GENERATE_ITINERARY_API!
+
 export default firebaseConfig;

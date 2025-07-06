@@ -861,3 +861,148 @@ body, html, #root, .odi-bg {
     font-size: 0.9rem;
   }
 }
+
+/* Travel-themed Loading Animation */
+.odi-travel-loader {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.odi-travel-loader .hiker {
+  animation: walk 3s ease-in-out infinite;
+}
+
+.odi-travel-loader .hiker .arm-left {
+  animation: swingLeft 1s ease-in-out infinite;
+  transform-origin: 20px 52px;
+}
+
+.odi-travel-loader .hiker .arm-right {
+  animation: swingRight 1s ease-in-out infinite;
+  transform-origin: 20px 52px;
+}
+
+.odi-travel-loader .hiker .leg-left {
+  animation: stepLeft 1s ease-in-out infinite;
+  transform-origin: 20px 58px;
+}
+
+.odi-travel-loader .hiker .leg-right {
+  animation: stepRight 1s ease-in-out infinite;
+  transform-origin: 20px 58px;
+}
+
+.odi-travel-loader .map {
+  animation: float 2s ease-in-out infinite;
+}
+
+.odi-travel-loader .compass {
+  animation: rotate 4s linear infinite;
+  transform-origin: 70px 25px;
+}
+
+@keyframes walk {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(80px);
+  }
+}
+
+@keyframes swingLeft {
+  0%, 100% {
+    transform: rotate(-15deg);
+  }
+  50% {
+    transform: rotate(15deg);
+  }
+}
+
+@keyframes swingRight {
+  0%, 100% {
+    transform: rotate(15deg);
+  }
+  50% {
+    transform: rotate(-15deg);
+  }
+}
+
+@keyframes stepLeft {
+  0%, 100% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes stepRight {
+  0%, 100% {
+    transform: rotate(10deg);
+  }
+  50% {
+    transform: rotate(-10deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(35px, 35px) translateY(0px);
+  }
+  50% {
+    transform: translate(35px, 35px) translateY(-3px);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: translate(70px, 25px) rotate(0deg);
+  }
+  to {
+    transform: translate(70px, 25px) rotate(360deg);
+  }
+}
+
+/* Responsive adjustments for travel loader */
+@media (max-width: 768px) {
+  .odi-travel-loader svg {
+    width: 100px;
+    height: 70px;
+  }
+  
+  .odi-travel-loader .hiker {
+    animation: walk 2.5s ease-in-out infinite;
+  }
+  
+  @keyframes walk {
+    0%, 100% {
+      transform: translateX(0px);
+    }
+    50% {
+      transform: translateX(60px);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .odi-travel-loader svg {
+    width: 80px;
+    height: 60px;
+  }
+  
+  .odi-travel-loader .hiker {
+    animation: walk 2s ease-in-out infinite;
+  }
+  
+  @keyframes walk {
+    0%, 100% {
+      transform: translateX(0px);
+    }
+    50% {
+      transform: translateX(50px);
+    }
+  }
+}
