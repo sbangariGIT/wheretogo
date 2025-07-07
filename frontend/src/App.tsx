@@ -58,10 +58,6 @@ export async function getLatestCityDocument(city: string) {
       throw new Error(`Failed to generate itinerary for ${city}: ${response.statusText}`);
     }
     const data = await response.json();
-    // Save to Firestore under city/latest
-    const cityRef = collection(db, city);
-    const latestDocRef = doc(cityRef, 'latest');
-    setDoc(latestDocRef, data);
     return data;
     }
 

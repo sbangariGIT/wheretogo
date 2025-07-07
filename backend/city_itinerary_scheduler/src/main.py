@@ -11,7 +11,6 @@ from datetime import datetime, time
 from zoneinfo import ZoneInfo
 import asyncio
 import aiohttp
-from firebase import firebaseHandler
 from slack_logger import dbg
 
 GENERATE_ITINERARY_API = os.environ["GENERATE_ITINERARY_API"]
@@ -26,8 +25,7 @@ async def call_api(session, city):
     }
     try:
         async with session.post(GENERATE_ITINERARY_API, json=payload) as response:
-            data = await response.json()
-            firebaseHandler.add_document(city['city_name'], "latest", data)
+            await response.json()
             dbg.info(f"Successfully processed {city['city_name']}")
             return {"city": city["city_name"], "status": "success"}
     except Exception as e:

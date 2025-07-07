@@ -13,6 +13,7 @@ from .google_places import get_restaurant_options, get_tourist_places
 from .weather import get_weather_today
 from .ticket_master import get_events_today
 from .slack_logger import dbg
+from firebase import firebaseHandler
 
 class Activity(BaseModel):
     start_time: str
@@ -79,7 +80,9 @@ def process_request(payload):
     response = ask_gpt(question, ITINERARY_GENERATION_PROMPT, "gpt-4o-2024-08-06")
     failures['city'] = city
     dbg.info("Failures: {}".format(failures))
-    return json.loads(response.model_dump_json()), 200
+    data = json.loads(response.model_dump_json())
+    firebaseHandler.add_document(city, "latest", data)
+    return data, 200
 
 
 @functions_framework.http
@@ -107,6 +110,7 @@ def one_day_itinerary(request):
             result, status_code = process_request(request.get_json())
             end_time = time.time()
             result.update({"request_process_time": end_time - start_time})
+
             dbg.info("Done.")
             return result, status_code, headers
         except Exception as e:

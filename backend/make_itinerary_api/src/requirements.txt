@@ -6,3 +6,4 @@ python-dotenv
 openmeteo-requests
 numpy
 pandas
+firebase_admin
