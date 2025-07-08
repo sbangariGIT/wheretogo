@@ -110,7 +110,6 @@ def one_day_itinerary(request):
             result, status_code = process_request(request.get_json())
             end_time = time.time()
             result.update({"request_process_time": end_time - start_time})
-
             dbg.info("Done.")
             return result, status_code, headers
         except Exception as e:

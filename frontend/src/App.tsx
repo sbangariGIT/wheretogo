@@ -6,7 +6,7 @@ import defaultImage from './assets/default.png';
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics, logEvent } from "firebase/analytics";
-import { collection, doc, getDoc, addDoc, setDoc} from "firebase/firestore";
+import { collection, doc, getDoc, addDoc} from "firebase/firestore";
 // Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -375,7 +375,7 @@ function App() {
                     </span>
                     <span style={{ fontSize: "0.6em", color: "#555", marginTop: 4, textAlign: "center" }}>
                       We are generating the perfect day for today.<br />
-                      This usually takes around <b>10 seconds</b>.<br />
+                      This usually takes around <b>1 minute</b>.<br />
                       Thanks for your patience!
                     </span>
                   </div>
