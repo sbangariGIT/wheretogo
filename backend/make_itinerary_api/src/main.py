@@ -29,12 +29,14 @@ class Itinerary(BaseModel):
 
 openai_client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
-def generate_query(weather_info, restaurant_options, places_options, events):
+def generate_query(weather_info={}, restaurant_options={}, places_options={}, events={}):
     return ITINERARY_GENERATION_QUERY.format(
         weather_info=weather_info,
         restaurants=restaurant_options,
         places_options=places_options,
-        events=events)
+        events=events,
+        today=datetime.now(timezone.utc)
+        )
 
 def ask_gpt(question, prompt, model):
     try:

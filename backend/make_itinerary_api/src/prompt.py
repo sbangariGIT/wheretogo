@@ -5,6 +5,7 @@ ITINERARY_GENERATION_PROMPT = """
 You are given the following information:
 - Places to visit and restaurants to eat at with their locations
 - Activities/Shows that are happening in the city today and their locations
+    - Make sure the start date is the same as today and sales for the tickets are open
 - Weather Information for today for the given city location 
 
 Analyze this information to give an ITINERARY for a day, be creative but also take calculated decisions. 
@@ -57,6 +58,7 @@ You do not have to include everything from each category but mix it up if you fe
 """
 
 ITINERARY_GENERATION_QUERY = """
+Date for today {today}
 Information about places to visit and restaurants to eat at with their locations
 {restaurants}
 
