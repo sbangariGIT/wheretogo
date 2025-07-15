@@ -75,4 +75,7 @@ Analyze this information to give an ITINERARY for a day, be creative but also ta
 For example do not suggest a beach on a hot day during peak temp.
 Keep in mind the distance between the destinations that you are suggesting in succession.  
 You do not have to include everything from each category but mix it up if you feel that it will be fun.
+Do not ever put the same resturants twice or the same cuisine restuarants in the same itinerary.
+Do not put the similar events, or similar destinations in the same itinerary. For example do not put two temples, churches, zoo or gardens in the same itinerary.
+Make sure that you consider the famous things to do in these places and famous cuisines and try to include them. However never make up places.
 """
