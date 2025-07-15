@@ -272,7 +272,7 @@ function App() {
           
           {/* Search Bar */}
           <div className="odi-search-container" ref={searchRef}>
-            <div className="odi-search-wrapper">
+            <div className="odi-search-wrapper" style={{ position: 'relative' }}>
               <input
                 type="text"
                 className="odi-search-input"
@@ -281,6 +281,21 @@ function App() {
                 onChange={handleSearchChange}
                 onFocus={() => setShowDropdown(true)}
               />
+              {searchTerm && (
+                <button
+                  type="button"
+                  className="odi-search-clear"
+                  aria-label="Clear search"
+                  onClick={() => {
+                    setSearchTerm('');
+                    setSelectedCity(null);
+                    setItinerary(null);
+                    setError(null);
+                  }}
+                >
+                  ×
+                </button>
+              )}
               {showDropdown && filteredCities.length > 0 && (
                 <div className="odi-search-dropdown">
                   {filteredCities.map((city) => (

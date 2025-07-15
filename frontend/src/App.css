@@ -246,6 +246,7 @@ body, html, #root, .odi-bg {
 
 .odi-search-wrapper {
   position: relative;
+  overflow: visible;
 }
 
 .odi-search-input {
@@ -1005,4 +1006,22 @@ body, html, #root, .odi-bg {
       transform: translateX(50px);
     }
   }
+}
+
+.odi-search-clear {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #888;
+  padding: 0;
+  line-height: 1;
+  z-index: 2;
+}
+.odi-search-clear:hover {
+  color: #222;
 }
