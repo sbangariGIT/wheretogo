@@ -11,6 +11,8 @@ import { collection, doc, getDoc, addDoc} from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 import firebaseConfig, {API_URL} from './constants.tsx';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -400,6 +402,42 @@ function App() {
               </h2>
               {/* <div className="odi-date">Date: {today}</div> */}
             </div>
+
+            {/* Download as PDF Button */}
+            {itinerary && !loading && (
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+                <button
+                  className="odi-download-pdf"
+                  onClick={async () => {
+                    if (!itineraryRef.current) return;
+                    const element = itineraryRef.current;
+                    const canvas = await html2canvas(element, { scale: 2 });
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+                    // Calculate width/height for A4
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    // Keep aspect ratio
+                    const imgWidth = pageWidth - 40;
+                    const imgHeight = canvas.height * (imgWidth / canvas.width);
+                    pdf.addImage(imgData, 'PNG', 20, 20, imgWidth, imgHeight);
+                    pdf.save(`${selectedCity.city_name}_itinerary.pdf`);
+                  }}
+                  style={{
+                    background: '#007bff',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: 8,
+                    padding: '0.7rem 1.5rem',
+                    fontSize: '1rem',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    marginBottom: 8
+                  }}
+                >
+                  Download as PDF
+                </button>
+              </div>
+            )}
 
             {itinerary && !loading && (
               <>
