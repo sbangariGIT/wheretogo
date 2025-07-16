@@ -411,15 +411,66 @@ function App() {
                   onClick={async () => {
                     if (!itineraryRef.current) return;
                     const element = itineraryRef.current;
-                    const canvas = await html2canvas(element, { scale: 2 });
+                    
+                    // Better html2canvas options for mobile and full content capture
+                    const canvas = await html2canvas(element, { 
+                      scale: 2,
+                      useCORS: true,
+                      allowTaint: true,
+                      scrollX: 0,
+                      scrollY: 0,
+                      windowWidth: element.scrollWidth,
+                      windowHeight: element.scrollHeight,
+                      width: element.scrollWidth,
+                      height: element.scrollHeight
+                    });
+                    
                     const imgData = canvas.toDataURL('image/png');
                     const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
-                    // Calculate width/height for A4
+                    
+                    // Calculate dimensions for A4
                     const pageWidth = pdf.internal.pageSize.getWidth();
-                    // Keep aspect ratio
-                    const imgWidth = pageWidth - 40;
-                    const imgHeight = canvas.height * (imgWidth / canvas.width);
-                    pdf.addImage(imgData, 'PNG', 20, 20, imgWidth, imgHeight);
+                    const pageHeight = pdf.internal.pageSize.getHeight();
+                    const margin = 20;
+                    const imgWidth = pageWidth - (2 * margin);
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                    
+                    // If content is taller than one page, split into multiple pages
+                    if (imgHeight > pageHeight - (2 * margin)) {
+                      const pagesNeeded = Math.ceil(imgHeight / (pageHeight - (2 * margin)));
+                      
+                      for (let i = 0; i < pagesNeeded; i++) {
+                        if (i > 0) {
+                          pdf.addPage();
+                        }
+                        
+                        const sourceY = i * (canvas.height / pagesNeeded);
+                        const sourceHeight = canvas.height / pagesNeeded;
+                        
+                        // Create a temporary canvas for this page
+                        const tempCanvas = document.createElement('canvas');
+                        const tempCtx = tempCanvas.getContext('2d');
+                        tempCanvas.width = canvas.width;
+                        tempCanvas.height = sourceHeight;
+                        
+                        if (tempCtx) {
+                          tempCtx.drawImage(
+                            canvas,
+                            0, sourceY, canvas.width, sourceHeight,
+                            0, 0, canvas.width, sourceHeight
+                          );
+                          
+                          const pageImgData = tempCanvas.toDataURL('image/png');
+                          const pageImgHeight = (sourceHeight * imgWidth) / canvas.width;
+                          
+                          pdf.addImage(pageImgData, 'PNG', margin, margin, imgWidth, pageImgHeight);
+                        }
+                      }
+                    } else {
+                      // Single page
+                      pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
+                    }
+                    
                     pdf.save(`${selectedCity.city_name}_itinerary.pdf`);
                   }}
                   style={{
