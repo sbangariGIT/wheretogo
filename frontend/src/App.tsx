@@ -108,6 +108,7 @@ const CITIES_BY_TIMEZONE = {
       {city_id: 4, city_name: "Columbus", latitude: 39.9612, longitude: -82.9988, country: "USA", timezone: "America/New_York"},
       {city_id: 5, city_name: "Charlotte", latitude: 35.2271, longitude: -80.8431, country: "USA", timezone: "America/New_York"},
       {city_id: 6, city_name: "Boston", latitude: 42.3601, longitude: -71.0589, country: "USA", timezone: "America/New_York"},
+      {city_id: 16, city_name: "Atlanta", latitude: 33.7490, longitude: -84.3880, country: "USA", timezone: "America/New_York"}
   ],
   "America/Chicago": [
       {city_id: 7, city_name: "Chicago", latitude: 41.8781, longitude: -87.6298, country: "USA", timezone: "America/Chicago"},
