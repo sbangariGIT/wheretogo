@@ -70,7 +70,7 @@ def clean_up(request):
 
     # Get the payload from the request
     try:
-        dbg.info("Trigger Hourly City Scheduler.")
+        dbg.info("Trigger Hourly City Clean Up Scheduler.")
         result = process_request()
         return result, 200, headers
     except Exception as e:

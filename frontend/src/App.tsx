@@ -215,6 +215,10 @@ function App() {
       setTimeout(() => {
         itineraryRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
+      logEvent(
+        analytics,
+        `wheretogotoday_itinerary_requested_${city.city_name}_${city.country}`
+      );
       const itineraryData = await getItineraryForCity(city);
       setItinerary(itineraryData);
     } catch (error) {
